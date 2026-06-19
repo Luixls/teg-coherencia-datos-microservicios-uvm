@@ -536,9 +536,7 @@ td .evidence{font-size:12px;color:#43613a;margin-top:7px;background:#f4f9ef;bord
   <section class="hero">
     <h2>Instrumento para aplicar los diez lineamientos propuestos</h2>
     <p>
-      Este archivo permite registrar un proceso distribuido, diagnosticar su madurez transaccional,
-      evaluar la aplicación de los lineamientos, seleccionar un patrón transaccional, revisar indicadores
-      y generar un reporte imprimible para la toma de decisiones.
+      Versión demostrativa prellenada con el caso hipotético Comercial Andina Digital, C.A. de la sección 4.9 del TEG. Este archivo permite registrar el proceso distribuido, diagnosticar su madurez transaccional, evaluar la aplicación de los lineamientos, seleccionar un patrón transaccional, revisar indicadores y generar un reporte imprimible para la toma de decisiones.
     </p>
     <div class="summary-grid">
       <div class="summary-card"><div class="label">Aplicación</div><div class="value" id="sumAplicacion">0%</div><div class="small">según lineamientos</div></div>
@@ -841,6 +839,9 @@ function recomendarPatron(){
   if(multi === "no"){
     patron = "Transacción local documentada";
     just = "El flujo no requiere un patrón distribuido principal. Se recomienda documentar la transacción local, responsable, logs e idempotencia si existen reintentos.";
+  } else if(dual === "si" && comp === "si" && control === "alto"){
+    patron = "Transactional Outbox + Saga por orquestación";
+    just = "El proceso combina riesgo de doble escritura con fallas parciales compensables. Transactional Outbox permite controlar la relación entre persistencia y publicación de eventos, mientras que Saga por orquestación permite coordinar pasos, estados y compensaciones de pago, inventario y facturación.";
   } else if(dual === "si"){
     patron = "Transactional Outbox";
     just = "Existe riesgo de doble escritura. Conviene vincular la persistencia local y el mensaje pendiente dentro de la misma transacción local, con despacho controlado y monitoreo.";
@@ -980,7 +981,7 @@ function cargar(data){
   actualizar();
 }
 function guardar(){
-  localStorage.setItem("instrumento_lineamientos_uvm", JSON.stringify(datos()));
+  localStorage.setItem("instrumento_lineamientos_andina_uvm", JSON.stringify(datos()));
   alert("Avance guardado en este navegador.");
 }
 function exportarJSON(){
@@ -993,7 +994,7 @@ function exportarJSON(){
 }
 function reiniciar(){
   if(!confirm("¿Desea limpiar todos los campos del instrumento?")) return;
-  localStorage.removeItem("instrumento_lineamientos_uvm");
+  localStorage.removeItem("instrumento_lineamientos_andina_uvm");
   document.querySelectorAll("input,select,textarea").forEach(el => {
     if(el.type === "date") el.value = "";
     else if(el.tagName === "SELECT") el.selectedIndex = 0;
@@ -1006,12 +1007,108 @@ function reiniciar(){
   actualizar();
 }
 
+
+function cargarCasoAndinaDigital(){
+  const set = (id, value) => {
+    const el = document.getElementById(id);
+    if(el) el.value = value;
+  };
+
+  set("org", "Comercial Andina Digital, C.A.");
+  set("proceso", "Compra en línea con pago electrónico y actualización de inventario");
+  set("respTec", "Arquitecto de software / líder técnico de microservicios");
+  set("respFun", "Responsable funcional de comercio electrónico y operaciones");
+  set("fecha", "2026-06-13");
+  set("version", "1.0 · Caso hipotético 4.9");
+  set("servicios", "catálogo, órdenes, pagos, inventario, facturación y notificaciones");
+  set("descripcion", "Caso ficticio de comercio electrónico venezolano. El flujo inicia cuando el cliente confirma una compra en línea; el servicio de órdenes registra la solicitud y genera un identificador de correlación; luego intervienen pagos, inventario, facturación y notificaciones. Los KPIs cargados corresponden a metas esperadas del caso hipotético, no a mediciones reales de producción.");
+
+  seleccionarNivel(2);
+
+  set("impactoOperativo", "3");
+  set("impactoFinanciero", "3");
+  set("impactoUsuario", "3");
+  set("impactoLegal", "2");
+
+  const ratings = {
+    1: 4,
+    2: 4,
+    3: 2,
+    4: 1,
+    5: 1,
+    6: 3,
+    7: 1,
+    8: 1,
+    9: 0,
+    10: 2
+  };
+
+  const evidencias = {
+    1: "Aplicación del MMTM al caso hipotético. La organización se ubica inicialmente en Nivel 2: Definido, con posibilidad de avanzar hacia Nivel 3: Gestionado.",
+    2: "Proceso crítico priorizado: compra en línea con pago electrónico y actualización de inventario, por involucrar orden, pago, inventario y factura.",
+    3: "Cada servicio administra datos propios; sin embargo, la documentación completa de responsables técnicos y funcionales aún debe formalizarse.",
+    4: "Antes de aplicar los lineamientos, no existe matriz completa de flujo transaccional crítico de extremo a extremo.",
+    5: "Algunos eventos se publican después de guardar datos, sin control formal de doble escritura.",
+    6: "El árbol de decisión orienta una combinación de Transactional Outbox y Saga por orquestación para el flujo crítico.",
+    7: "Las fallas parciales se atienden de forma reactiva; deben formalizarse compensaciones e idempotencia para pago, inventario y facturación.",
+    8: "La reconstrucción de una operación depende de revisión manual de registros separados; se propone usar identificadores de correlación, logs, métricas y trazas.",
+    9: "No existe un formato único para documentar inconsistencias, causa probable, evidencia, corrección y lección aprendida.",
+    10: "Se definen KPIs esperados de coherencia como metas referenciales del caso hipotético."
+  };
+
+  const acciones = {
+    1: "Revisar el nivel MMTM después de aplicar patrones, trazabilidad y mecanismos de supervisión.",
+    2: "Mantener el proceso de compra como flujo piloto para validar la guía operativa.",
+    3: "Completar ficha de propiedad de datos para catálogo, órdenes, pagos, inventario, facturación y notificaciones.",
+    4: "Construir matriz de flujo transaccional con servicios, pasos, eventos, estados intermedios y puntos de falla.",
+    5: "Aplicar Transactional Outbox para vincular persistencia y publicación de eventos en pasos críticos.",
+    6: "Documentar formalmente la decisión arquitectónica: Transactional Outbox para publicación confiable y Saga por orquestación para compensaciones.",
+    7: "Definir acciones compensatorias para pago, inventario y facturación; incorporar reintentos controlados e idempotencia.",
+    8: "Incorporar correlationId, logs estructurados, métricas, trazas distribuidas y tablero de seguimiento.",
+    9: "Adoptar protocolo de incidentes por inconsistencia con responsable, evidencia, causa probable, corrección y lección aprendida.",
+    10: "Levantar mediciones reales cuando el caso pase de simulación académica a piloto técnico."
+  };
+
+  for(let i=1; i<=10; i++){
+    set("lin_"+i, String(ratings[i]));
+    set("ev_"+i, evidencias[i]);
+    set("ac_"+i, acciones[i]);
+  }
+
+  set("dMulti", "si");
+  set("dDual", "si");
+  set("dComp", "si");
+  set("dControl", "alto");
+  set("dCQRS", "no");
+  set("dES", "no");
+  set("dLat", "media");
+  set("dMadurez", "media");
+
+  set("k1", "1");
+  set("k2", "30");
+  set("k3", "2");
+  set("k4", "5");
+  set("k5", "95");
+  set("k6", "100");
+  set("k7", "100");
+
+  actualizar();
+  generarReporte();
+}
+
+
 crearNiveles();
 crearLineamientos();
 crearKPIs();
 document.getElementById("fecha").valueAsDate = new Date();
 actualizar();
-try{ cargar(JSON.parse(localStorage.getItem("instrumento_lineamientos_uvm"))); }catch(e){}
+
+const casoGuardado = localStorage.getItem("instrumento_lineamientos_andina_uvm");
+if(casoGuardado){
+  try{ cargar(JSON.parse(casoGuardado)); generarReporte(); }catch(e){ cargarCasoAndinaDigital(); }
+} else {
+  cargarCasoAndinaDigital();
+}
 </script>
 </body>
 </html>

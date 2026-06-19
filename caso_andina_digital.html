@@ -3,953 +3,1015 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Guía Operativa · Coherencia de Datos en Microservicios · Araujo (2026)</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<title>Instrumento de Aplicación de Lineamientos · Coherencia de Datos en Microservicios</title>
 <style>
-  :root {
-    --bg: #ffffff;
-    --bg2: #f5f5f3;
-    --bg3: #eeede9;
-    --text: #1a1a18;
-    --text2: #5f5e5a;
-    --text3: #888780;
-    --border: rgba(0,0,0,0.12);
-    --border2: rgba(0,0,0,0.22);
-    --radius: 10px;
-    --radius-lg: 14px;
-    --green: #639922;
-    --green-bg: #eaf3de;
-    --green-dark: #3b6d11;
-    --blue: #378add;
-    --blue-bg: #e6f1fb;
-    --blue-dark: #185fa5;
-    --purple: #7f77dd;
-    --purple-bg: #eeedfe;
-    --purple-dark: #3c3489;
-    --amber: #ef9f27;
-    --amber-bg: #faeeda;
-    --amber-dark: #854f0b;
-    --red: #e24b4a;
-    --red-bg: #fcebeb;
-    --red-dark: #a32d2d;
-    --teal-bg: #e1f5ee;
-    --teal-dark: #0f6e56;
-    --shadow: 0 2px 16px rgba(0,0,0,0.07);
+:root{
+  --uvm:#77b82a;
+  --uvm-dark:#3d6f16;
+  --navy:#102f54;
+  --ink:#17212b;
+  --muted:#607080;
+  --line:#d7e0e6;
+  --paper:#ffffff;
+  --soft:#f4f8f1;
+  --soft-blue:#eef5fb;
+  --warning:#f5a524;
+  --danger:#cf3f3f;
+  --ok:#2d8a48;
+  --radius:16px;
+  --shadow:0 10px 28px rgba(16,47,84,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  color:var(--ink);
+  background:linear-gradient(145deg,#f7faf6 0%,#eaf2e6 100%);
+  line-height:1.5;
+}
+header{
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 3px 18px rgba(0,0,0,.05);
+}
+.header-inner{
+  max-width:1180px;
+  margin:auto;
+  padding:14px 22px;
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  align-items:center;
+}
+.brand{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.logo-mark{
+  width:44px;height:44px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#b8e779,var(--uvm));
+  border:2px solid #d7efc6;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--uvm-dark);
+  font-weight:800;
+  letter-spacing:-1px;
+}
+.brand h1{
+  margin:0;
+  font-size:17px;
+  color:var(--navy);
+  line-height:1.2;
+}
+.brand p{
+  margin:2px 0 0;
+  font-size:12px;
+  color:var(--muted);
+}
+.header-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+button,.btn{
+  border:0;
+  border-radius:12px;
+  padding:10px 14px;
+  background:var(--navy);
+  color:white;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:700;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+button.secondary{
+  background:#edf3f8;
+  color:var(--navy);
+  border:1px solid #d7e3ed;
+}
+button.green{background:var(--uvm-dark)}
+button.danger{background:#fff0f0;color:var(--danger);border:1px solid #f2c2c2}
+button:hover{filter:brightness(.97)}
+.shell{
+  max-width:1180px;
+  margin:auto;
+  padding:24px 22px 60px;
+}
+.hero{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:28px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+.hero:after{
+  content:"";
+  position:absolute;
+  right:-80px;
+  top:-80px;
+  width:240px;
+  height:240px;
+  background:rgba(119,184,42,.15);
+  border-radius:50%;
+}
+.hero h2{
+  margin:0 0 8px;
+  color:var(--navy);
+  font-size:28px;
+}
+.hero p{
+  margin:0;
+  color:var(--muted);
+  max-width:850px;
+}
+.summary-grid{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+}
+.summary-card{
+  background:#fbfdf9;
+  border:1px solid #e1ecd8;
+  border-radius:16px;
+  padding:14px;
+}
+.summary-card .label{
+  color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  font-weight:800;
+  letter-spacing:.04em;
+}
+.summary-card .value{
+  color:var(--navy);
+  font-size:24px;
+  font-weight:900;
+  margin-top:4px;
+}
+.summary-card .small{font-size:12px;color:var(--muted)}
+.navbar{
+  margin:18px 0;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:8px;
+}
+.navbar a{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:12px 10px;
+  color:var(--navy);
+  text-decoration:none;
+  font-size:13px;
+  font-weight:800;
+  text-align:center;
+  box-shadow:0 4px 16px rgba(16,47,84,.04);
+}
+.navbar a:hover{border-color:var(--uvm);background:var(--soft)}
+.section{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:24px;
+  margin:18px 0;
+  box-shadow:var(--shadow);
+}
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  border-bottom:1px solid var(--line);
+  padding-bottom:14px;
+  margin-bottom:18px;
+}
+.section-title h3{
+  margin:0;
+  color:var(--navy);
+  font-size:21px;
+}
+.section-title span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+}
+.help{
+  background:var(--soft-blue);
+  border:1px solid #d6e5f3;
+  color:#314f68;
+  padding:12px 14px;
+  border-radius:14px;
+  margin-bottom:16px;
+  font-size:13px;
+}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.form-grid.three{grid-template-columns:repeat(3,1fr)}
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:800;
+  color:var(--navy);
+  margin-bottom:6px;
+}
+input,select,textarea{
+  width:100%;
+  border:1px solid #cfdbe4;
+  background:#fff;
+  border-radius:12px;
+  padding:10px 12px;
+  color:var(--ink);
+  font:inherit;
+  font-size:14px;
+}
+textarea{min-height:86px;resize:vertical}
+input:focus,select:focus,textarea:focus{
+  outline:3px solid rgba(119,184,42,.20);
+  border-color:var(--uvm);
+}
+.level-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:10px;
+}
+.level-card{
+  border:2px solid var(--line);
+  background:#fbfcfd;
+  border-radius:16px;
+  padding:14px;
+  cursor:pointer;
+  min-height:135px;
+  transition:.15s ease;
+}
+.level-card:hover{transform:translateY(-2px);border-color:var(--uvm)}
+.level-card.active{
+  border-color:var(--uvm);
+  background:var(--soft);
+  box-shadow:0 0 0 4px rgba(119,184,42,.12);
+}
+.level-card .num{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:var(--navy);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  margin-bottom:8px;
+}
+.level-card h4{margin:0 0 4px;color:var(--navy)}
+.level-card p{margin:0;color:var(--muted);font-size:12px}
+.risk-row{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:12px;
+}
+.score-pill{
+  display:inline-flex;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  background:#edf3f8;
+  color:var(--navy);
+}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:980px;
+}
+th{
+  background:#f0f6ec;
+  color:var(--navy);
+  text-align:left;
+  padding:12px;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.03em;
+}
+td{
+  border-top:1px solid var(--line);
+  padding:12px;
+  vertical-align:top;
+  font-size:13px;
+}
+td .lin-title{font-weight:900;color:var(--navy)}
+td .lin-desc{color:var(--muted);font-size:12px;margin-top:4px}
+td .evidence{font-size:12px;color:#43613a;margin-top:7px;background:#f4f9ef;border:1px solid #dcebd2;border-radius:10px;padding:7px}
+.rating-select{min-width:150px}
+.status{
+  font-weight:900;
+  border-radius:999px;
+  padding:5px 9px;
+  display:inline-flex;
+  font-size:11px;
+}
+.s0{background:#f8e8e8;color:#a02e2e}
+.s1{background:#fff1d6;color:#925a00}
+.s2{background:#edf3f8;color:#234d70}
+.s3{background:#e9f7e6;color:#2d7a32}
+.s4{background:#dcf0d2;color:#22651f}
+.decision-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.result-box{
+  background:linear-gradient(135deg,#eef7e8,#f9fcf6);
+  border:1px solid #d6eac9;
+  border-left:6px solid var(--uvm);
+  border-radius:18px;
+  padding:18px;
+  margin-top:16px;
+}
+.result-box h4{margin:0 0 6px;color:var(--navy);font-size:20px}
+.result-box p{margin:0;color:var(--muted)}
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.kpi-card{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  background:#fbfcfd;
+}
+.kpi-card h4{margin:0 0 8px;color:var(--navy);font-size:14px}
+.kpi-meta{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.dot.ok{background:var(--ok)}
+.dot.warn{background:var(--warning)}
+.dot.bad{background:var(--danger)}
+.progress-outer{
+  background:#e5edf3;
+  border-radius:999px;
+  height:12px;
+  overflow:hidden;
+  margin:8px 0;
+}
+.progress-inner{
+  height:100%;
+  background:linear-gradient(90deg,var(--uvm),#a3d86b);
+  width:0%;
+  transition:width .2s ease;
+}
+.report{
+  background:#ffffff;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:20px;
+}
+.report h4{
+  margin:20px 0 8px;
+  color:var(--navy);
+}
+.report h4:first-child{margin-top:0}
+.report ul{margin-top:6px}
+.report li{margin-bottom:6px}
+.notice{
+  border-left:5px solid var(--navy);
+  background:#f2f6fa;
+  padding:12px 14px;
+  border-radius:12px;
+  color:#344b60;
+  font-size:13px;
+}
+.footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:28px;
+}
+@media(max-width:900px){
+  .summary-grid,.navbar,.form-grid,.form-grid.three,.level-grid,.risk-row,.decision-grid,.kpi-grid{
+    grid-template-columns:1fr;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1e1e1c;
-      --bg2: #272725;
-      --bg3: #313130;
-      --text: #f0ede6;
-      --text2: #a8a69f;
-      --text3: #6e6c66;
-      --border: rgba(255,255,255,0.10);
-      --border2: rgba(255,255,255,0.20);
-      --green-bg: #173404;
-      --green-dark: #c0dd97;
-      --blue-bg: #042c53;
-      --blue-dark: #b5d4f4;
-      --purple-bg: #26215c;
-      --purple-dark: #cecbf6;
-      --amber-bg: #412402;
-      --amber-dark: #fac775;
-      --red-bg: #501313;
-      --red-dark: #f7c1c1;
-      --teal-bg: #04342c;
-      --teal-dark: #9fe1cb;
-      --shadow: 0 2px 16px rgba(0,0,0,0.35);
-    }
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg3);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.6;
-    min-height: 100vh;
+  .header-inner{align-items:flex-start;flex-direction:column}
+  .header-actions{justify-content:flex-start}
+}
+@media print{
+  @page{
+    size: letter;
+    margin: 12mm;
   }
 
-  /* ── HEADER ── */
-  header {
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2rem;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: var(--shadow);
-  }
-  .header-inner {
-    max-width: 960px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 56px;
-  }
-  .header-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .header-icon {
-    width: 32px; height: 32px;
-    background: var(--green-bg);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px;
-  }
-  .header-title { font-size: 14px; font-weight: 600; color: var(--text); }
-  .header-sub { font-size: 11px; color: var(--text3); margin-top: 1px; }
-  .header-meta { font-size: 11px; color: var(--text3); text-align: right; }
-
-  /* ── LAYOUT ── */
-  .wrapper { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-
-  /* ── METRIC BAR ── */
-  .metric-bar {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 2rem;
-  }
-  .metric-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1rem 1.25rem;
-    box-shadow: var(--shadow);
-  }
-  .metric-label { font-size: 11px; color: var(--text3); font-weight: 500; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
-  .metric-val { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1.1; }
-  .metric-sub { font-size: 12px; color: var(--text2); margin-top: 3px; }
-
-  /* ── TABS ── */
-  .tabs {
-    display: flex;
-    gap: 0;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 5px;
-    margin-bottom: 1.5rem;
-    box-shadow: var(--shadow);
-    overflow-x: auto;
-  }
-  .tab {
-    flex: 1;
-    padding: 9px 14px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    background: none;
-    color: var(--text2);
-    border-radius: 8px;
-    transition: background .15s, color .15s;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-  }
-  .tab svg { width: 15px; height: 15px; flex-shrink: 0; }
-  .tab.active { background: var(--bg3); color: var(--text); }
-  .tab:hover:not(.active) { background: var(--bg2); color: var(--text); }
-
-  /* ── PANELS ── */
-  .panel { display: none; }
-  .panel.active { display: block; }
-
-  /* ── CARDS ── */
-  .card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    box-shadow: var(--shadow);
-    margin-bottom: 1rem;
-  }
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: .07em;
-    margin-bottom: 12px;
-    margin-top: 1.5rem;
-  }
-  .section-label:first-child { margin-top: 0; }
-
-  /* ── MMTM LEVELS ── */
-  .levels-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    margin-bottom: 1.25rem;
-  }
-  .level-btn {
-    border: 2px solid transparent;
-    border-radius: var(--radius);
-    padding: 14px 6px 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color .15s, transform .1s;
-    background: none;
-  }
-  .level-btn:hover { transform: translateY(-2px); }
-  .level-btn.active { border-color: currentColor !important; }
-  .level-n { font-size: 26px; font-weight: 700; line-height: 1; }
-  .level-name { font-size: 11px; font-weight: 500; margin-top: 5px; line-height: 1.3; }
-  .detail-box {
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    border: 1px solid var(--border);
-    animation: fadeIn .2s ease;
-  }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(4px) } to { opacity:1; transform:translateY(0) } }
-  .detail-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
-  .detail-section { font-size: 11px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .05em; margin: 12px 0 5px; }
-  .detail-text { font-size: 13px; line-height: 1.65; }
-  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .tag { font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; }
-
-  /* ── PHASES ── */
-  .phases-list { display: flex; flex-direction: column; gap: 0; }
-  .phase-row { display: flex; gap: 12px; align-items: flex-start; }
-  .phase-connector { width: 1px; background: var(--border2); height: 16px; margin-left: 13px; }
-  .phase-dot {
-    width: 28px; height: 28px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 3px;
-  }
-  .phase-body { flex: 1; padding-bottom: 12px; }
-  .phase-title { font-size: 13px; font-weight: 600; }
-  .phase-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
-
-  /* ── LINEAMIENTOS ── */
-  .lin-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
-  .lin-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1rem;
-    cursor: pointer;
-    transition: border-color .15s, box-shadow .15s;
-    box-shadow: var(--shadow);
-  }
-  .lin-card:hover { border-color: var(--border2); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-  .lin-card.done { border-left-color: var(--green) !important; }
-  .lin-card.selected { border-color: var(--blue); }
-  .lin-num { font-size: 10px; color: var(--text3); font-weight: 500; margin-bottom: 3px; text-transform: uppercase; }
-  .lin-title { font-size: 13px; font-weight: 600; line-height: 1.4; }
-  .lin-badges { display: flex; gap: 5px; margin-top: 8px; flex-wrap: wrap; }
-  .badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
-  .badge-org { background: var(--purple-bg); color: var(--purple-dark); }
-  .badge-op  { background: var(--blue-bg); color: var(--blue-dark); }
-  .badge-ev  { background: var(--green-bg); color: var(--green-dark); }
-  .badge-ok  { background: var(--green-bg); color: var(--green-dark); }
-
-  .progress-wrap { height: 6px; background: var(--bg3); border-radius: 20px; margin: 4px 0 8px; }
-  .progress-bar  { height: 100%; background: var(--green); border-radius: 20px; transition: width .35s; }
-
-  .lin-detail {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    animation: fadeIn .2s ease;
-  }
-  .lin-detail-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-  .lin-detail-desc { font-size: 13px; color: var(--text2); margin-bottom: 14px; line-height: 1.6; }
-  .check-row {
-    display: flex; align-items: center; gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    font-size: 13px;
-    transition: color .1s;
-  }
-  .check-row:last-child { border-bottom: none; }
-  .check-box {
-    width: 18px; height: 18px; border-radius: 5px;
-    border: 1.5px solid var(--border2);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: background .15s, border-color .15s;
-    background: var(--bg);
-  }
-  .check-box.on { background: var(--green); border-color: var(--green); }
-  .check-box.on::after { content: ''; display: block; width: 5px; height: 9px; border: 2px solid #fff; border-left: none; border-top: none; transform: rotate(45deg) translate(-1px,-1px); }
-  .check-row.done-row { color: var(--text3); text-decoration: line-through; }
-
-  /* ── ÁRBOL ── */
-  .tree-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-  }
-  .tree-q { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.5; }
-  .tree-step { font-size: 11px; color: var(--text3); margin-bottom: 14px; }
-  .tree-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .tree-opt {
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    cursor: pointer;
-    font-size: 13px;
-    text-align: left;
-    background: var(--bg2);
-    color: var(--text);
-    transition: border-color .15s, background .15s;
-    line-height: 1.5;
-  }
-  .tree-opt:hover { border-color: var(--blue); background: var(--bg); }
-  .tree-breadcrumb { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-  .crumb { font-size: 11px; color: var(--text3); background: var(--bg3); padding: 3px 8px; border-radius: 20px; }
-  .crumb-arrow { font-size: 11px; color: var(--text3); align-self: center; }
-  .result-card {
-    border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    animation: fadeIn .25s ease;
-    margin-bottom: 1rem;
-  }
-  .result-pattern { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .result-desc { font-size: 13px; line-height: 1.65; }
-  .reset-btn {
-    background: none; border: 1px solid var(--border2);
-    border-radius: var(--radius); padding: 8px 16px;
-    font-size: 13px; color: var(--text2); cursor: pointer;
-    transition: background .15s;
-  }
-  .reset-btn:hover { background: var(--bg2); }
-
-  /* ── KPIs ── */
-  .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
-  .kpi-card {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1rem 1.1rem;
-    box-shadow: var(--shadow);
-  }
-  .kpi-name { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 10px; line-height: 1.4; }
-  .kpi-slider-row { display: flex; align-items: center; gap: 8px; }
-  .kpi-slider {
-    flex: 1; -webkit-appearance: none; appearance: none;
-    height: 4px; border-radius: 20px; background: var(--bg3);
-    outline: none; cursor: pointer;
-  }
-  .kpi-slider::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 16px; height: 16px;
-    border-radius: 50%; background: var(--blue);
-    cursor: pointer; border: 2px solid var(--bg);
-    box-shadow: 0 0 0 1px var(--blue);
-  }
-  .kpi-num { font-size: 13px; font-weight: 700; min-width: 44px; text-align: right; }
-  .kpi-status { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
-  .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .dot-green { background: #639922; }
-  .dot-amber { background: #ef9f27; }
-  .dot-red   { background: #e24b4a; }
-  .kpi-meta  { font-size: 11px; color: var(--text3); }
-
-  .chart-wrap { position: relative; width: 100%; height: 280px; }
-
-  /* ── FOOTER ── */
-  footer {
-    text-align: center;
-    padding: 2rem 1rem;
-    font-size: 11px;
-    color: var(--text3);
-    border-top: 1px solid var(--border);
-    margin-top: 2rem;
-    background: var(--bg);
+  *{
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .metric-bar { grid-template-columns: 1fr 1fr; }
-    .metric-bar .metric-card:last-child { grid-column: span 2; }
-    .levels-grid { grid-template-columns: repeat(5, 1fr); gap: 5px; }
-    .level-n { font-size: 20px; }
-    .lin-grid { grid-template-columns: 1fr; }
-    .tree-opts { grid-template-columns: 1fr; }
-    .kpi-grid { grid-template-columns: 1fr; }
-    .tabs { gap: 0; }
-    .tab { font-size: 12px; padding: 8px 10px; }
+  html,body{
+    background:#fff!important;
+    margin:0!important;
+    padding:0!important;
   }
+
+  header,
+  .navbar,
+  .header-actions,
+  .no-print,
+  .hero,
+  .section:not(#reporte),
+  #reporte > .section-title,
+  .footer{
+    display:none!important;
+  }
+
+  .shell{
+    max-width:none!important;
+    width:100%!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  #reporte{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    box-shadow:none!important;
+    background:#fff!important;
+  }
+
+  #reporte .report{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    box-shadow:none!important;
+    border-radius:0!important;
+    background:#fff!important;
+    break-inside:auto!important;
+    page-break-inside:auto!important;
+  }
+
+  #reporte .report h4{
+    color:#102f54!important;
+    margin:10px 0 5px!important;
+    padding:0!important;
+    font-size:13.5pt!important;
+    page-break-after:avoid!important;
+    break-after:avoid-page!important;
+  }
+
+  #reporte .report h4:first-child{
+    margin-top:0!important;
+    font-size:15pt!important;
+  }
+
+  #reporte .report p,
+  #reporte .report li{
+    font-size:10.5pt!important;
+    line-height:1.35!important;
+  }
+
+  #reporte .report p{
+    margin:0 0 8px!important;
+  }
+
+  #reporte .report ul{
+    margin:4px 0 9px 18px!important;
+    padding:0!important;
+  }
+
+  #reporte .report li{
+    margin:0 0 3px!important;
+    padding-left:0!important;
+    break-inside:avoid-page!important;
+  }
+
+  #reporte .report::after{
+    content:"Instrumento derivado del Trabajo Especial de Grado: Lineamientos para mejorar la gestión de coherencia de datos en transacciones distribuidas de arquitecturas de microservicios. Universidad Valle del Momboy · Facultad de Ingeniería · Ingeniería en Computación · Trujillo, 2026.";
+    display:block;
+    margin-top:12px;
+    padding-top:8px;
+    border-top:1px solid #ccc;
+    color:#607080;
+    font-size:8.5pt;
+    line-height:1.25;
+    text-align:center;
+  }
+}
 </style>
 </head>
 <body>
-
 <header>
   <div class="header-inner">
-    <div class="header-brand">
-      <div class="header-icon">⬡</div>
+    <div class="brand">
+      <div class="logo-mark">UVM</div>
       <div>
-        <div class="header-title">Guía Operativa · Coherencia de datos en microservicios</div>
-        <div class="header-sub">Lineamientos organizacionales y operacionales · UVM 2026</div>
+        <h1>Instrumento de Aplicación y Evaluación de Lineamientos</h1>
+        <p>Gestión de coherencia de datos en transacciones distribuidas de arquitecturas de microservicios · 2026</p>
       </div>
     </div>
-    <div class="header-meta">
-      Araujo Giardinella (2026)<br>
-      Ing. Computación · UVM Trujillo
+    <div class="header-actions no-print">
+      <button class="secondary" onclick="guardar()">Guardar avance</button>
+      <button class="secondary" onclick="exportarJSON()">Exportar JSON</button>
+      <button class="green" onclick="generarReporte(); setTimeout(()=>window.print(),500)">Imprimir reporte</button>
+      <button class="danger" onclick="reiniciar()">Limpiar</button>
     </div>
   </div>
 </header>
 
-<div class="wrapper">
+<main class="shell">
+  <section class="hero">
+    <h2>Instrumento para aplicar los diez lineamientos propuestos</h2>
+    <p>
+      Este archivo permite registrar un proceso distribuido, diagnosticar su madurez transaccional,
+      evaluar la aplicación de los lineamientos, seleccionar un patrón transaccional, revisar indicadores
+      y generar un reporte imprimible para la toma de decisiones.
+    </p>
+    <div class="summary-grid">
+      <div class="summary-card"><div class="label">Aplicación</div><div class="value" id="sumAplicacion">0%</div><div class="small">según lineamientos</div></div>
+      <div class="summary-card"><div class="label">Nivel seleccionado</div><div class="value" id="sumNivel">—</div><div class="small">MMTM</div></div>
+      <div class="summary-card"><div class="label">Patrón sugerido</div><div class="value" id="sumPatron" style="font-size:16px">—</div><div class="small">según criterios del proceso</div></div>
+      <div class="summary-card"><div class="label">KPIs en meta</div><div class="value" id="sumKpis">0/7</div><div class="small">indicadores evaluados</div></div>
+    </div>
+  </section>
 
-  <!-- MÉTRICAS GLOBALES -->
-  <div class="metric-bar">
-    <div class="metric-card">
-      <div class="metric-label">Lineamientos</div>
-      <div class="metric-val" id="m-lin">0/10</div>
-      <div class="metric-sub">completados</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">Nivel MMTM</div>
-      <div class="metric-val" id="m-mmtm">—</div>
-      <div class="metric-sub">de madurez transaccional</div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-label">Patrón recomendado</div>
-      <div class="metric-val" id="m-patron" style="font-size:16px;padding-top:6px">—</div>
-      <div class="metric-sub">según árbol de decisión</div>
-    </div>
-  </div>
-
-  <!-- TABS -->
-  <nav class="tabs" role="tablist">
-    <button class="tab active" onclick="switchTab('diag')" role="tab" aria-selected="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m7 12 4-4 4 4 4-4"/></svg>
-      Diagnóstico
-    </button>
-    <button class="tab" onclick="switchTab('lin')" role="tab" aria-selected="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      Lineamientos
-    </button>
-    <button class="tab" onclick="switchTab('arbol')" role="tab" aria-selected="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
-      Árbol de decisión
-    </button>
-    <button class="tab" onclick="switchTab('eval')" role="tab" aria-selected="false">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      Evaluación KPIs
-    </button>
+  <nav class="navbar no-print">
+    <a href="#datos">1. Datos</a>
+    <a href="#diagnostico">2. Diagnóstico</a>
+    <a href="#lineamientos">3. Lineamientos</a>
+    <a href="#patron">4. Patrón</a>
+    <a href="#kpis">5. KPIs</a>
+    <a href="#reporte">6. Reporte</a>
   </nav>
 
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- PANEL 1: DIAGNÓSTICO                              -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <div class="panel active" id="panel-diag">
-    <div class="section-label">Modelo de madurez transaccional para microservicios (MMTM)</div>
-
-    <div class="levels-grid" id="levels-grid"></div>
-    <div id="level-detail" style="display:none; margin-bottom:1.5rem;"></div>
-
-    <div class="section-label">Fases de aplicación de la guía operativa</div>
-    <div class="card">
-      <div class="phases-list" id="phases-list"></div>
+  <section class="section" id="datos">
+    <div class="section-title">
+      <h3>1. Datos generales de aplicación</h3>
+      <span>Identificación del proceso evaluado</span>
     </div>
+    <div class="help">
+      Complete esta sección antes de aplicar los lineamientos. El instrumento puede aplicarse a un proceso real,
+      un flujo piloto o un caso hipotético de validación.
+    </div>
+    <div class="form-grid">
+      <div class="field"><label>Organización / unidad evaluada</label><input id="org" placeholder="Ej.: Comercial Andina Digital, C.A."></div>
+      <div class="field"><label>Proceso distribuido evaluado</label><input id="proceso" placeholder="Ej.: flujo compra → pago → inventario → facturación"></div>
+      <div class="field"><label>Responsable técnico</label><input id="respTec" placeholder="Nombre / cargo"></div>
+      <div class="field"><label>Responsable funcional</label><input id="respFun" placeholder="Nombre / área"></div>
+      <div class="field"><label>Fecha de aplicación</label><input id="fecha" type="date"></div>
+      <div class="field"><label>Versión del instrumento</label><input id="version" value="1.0"></div>
+    </div>
+    <div class="field" style="margin-top:14px">
+      <label>Microservicios involucrados</label>
+      <textarea id="servicios" placeholder="Ej.: órdenes, pagos, inventario, facturación, notificaciones"></textarea>
+    </div>
+    <div class="field" style="margin-top:14px">
+      <label>Descripción breve del flujo</label>
+      <textarea id="descripcion" placeholder="Describa el recorrido de la transacción y sus estados principales."></textarea>
+    </div>
+  </section>
+
+  <section class="section" id="diagnostico">
+    <div class="section-title">
+      <h3>2. Diagnóstico inicial</h3>
+      <span>Madurez transaccional y criticidad</span>
+    </div>
+    <div class="help">
+      Seleccione el nivel MMTM que más se aproxime al estado actual del proceso u organización. Luego evalúe la criticidad del flujo.
+    </div>
+    <div class="level-grid" id="levelGrid"></div>
+
+    <h4 style="color:var(--navy);margin:22px 0 10px">Criterios de criticidad del proceso</h4>
+    <div class="risk-row">
+      <div class="field"><label>Impacto operativo</label><select id="impactoOperativo" onchange="actualizar()"><option value="1">Bajo</option><option value="2">Medio</option><option value="3">Alto</option><option value="4">Crítico</option></select></div>
+      <div class="field"><label>Impacto financiero</label><select id="impactoFinanciero" onchange="actualizar()"><option value="1">Bajo</option><option value="2">Medio</option><option value="3">Alto</option><option value="4">Crítico</option></select></div>
+      <div class="field"><label>Impacto sobre usuarios</label><select id="impactoUsuario" onchange="actualizar()"><option value="1">Bajo</option><option value="2">Medio</option><option value="3">Alto</option><option value="4">Crítico</option></select></div>
+      <div class="field"><label>Impacto legal/auditoría</label><select id="impactoLegal" onchange="actualizar()"><option value="1">Bajo</option><option value="2">Medio</option><option value="3">Alto</option><option value="4">Crítico</option></select></div>
+    </div>
+    <p style="margin-top:14px">Resultado de criticidad: <span class="score-pill" id="criticidad">Baja</span></p>
+  </section>
+
+  <section class="section" id="lineamientos">
+    <div class="section-title">
+      <h3>3. Evaluación de los diez lineamientos</h3>
+      <span>Escala de aplicación y evidencias</span>
+    </div>
+    <div class="help">
+      Use la escala: 0 = No iniciado, 1 = Básico, 2 = Parcial, 3 = Aplicado, 4 = Evidenciado. 
+      La columna de evidencia permite dejar registro del documento, tablero, log, matriz o responsable que sustenta la evaluación.
+    </div>
+    <div class="progress-outer"><div class="progress-inner" id="progressLineamientos"></div></div>
+    <p>Porcentaje de aplicación: <strong id="pctLineamientos">0%</strong> · Interpretación: <strong id="interpLineamientos">Inicial</strong></p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:24%">Lineamiento</th>
+            <th style="width:16%">Dimensión</th>
+            <th style="width:17%">Estado</th>
+            <th style="width:23%">Evidencia / observación</th>
+            <th style="width:20%">Acción pendiente</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyLineamientos"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="patron">
+    <div class="section-title">
+      <h3>4. Selección orientativa de patrón transaccional</h3>
+      <span>Decisión según contexto del proceso</span>
+    </div>
+    <div class="help">
+      Esta sección no reemplaza una revisión arquitectónica. Su propósito es orientar la decisión inicial con base en las condiciones del proceso evaluado.
+    </div>
+    <div class="decision-grid">
+      <div class="field"><label>¿El flujo involucra más de un microservicio?</label><select id="dMulti" onchange="recomendarPatron()"><option value="si">Sí</option><option value="no">No</option></select></div>
+      <div class="field"><label>¿Existe riesgo de doble escritura?</label><select id="dDual" onchange="recomendarPatron()"><option value="no">No</option><option value="si">Sí</option></select></div>
+      <div class="field"><label>¿Requiere compensaciones ante fallas parciales?</label><select id="dComp" onchange="recomendarPatron()"><option value="no">No</option><option value="si">Sí</option></select></div>
+      <div class="field"><label>¿Se necesita control centralizado del flujo?</label><select id="dControl" onchange="recomendarPatron()"><option value="bajo">Bajo</option><option value="alto">Alto</option></select></div>
+      <div class="field"><label>¿Conviene separar lectura y escritura?</label><select id="dCQRS" onchange="recomendarPatron()"><option value="no">No</option><option value="si">Sí</option></select></div>
+      <div class="field"><label>¿Se requiere auditoría histórica completa?</label><select id="dES" onchange="recomendarPatron()"><option value="no">No</option><option value="si">Sí</option></select></div>
+      <div class="field"><label>Latencia aceptable</label><select id="dLat" onchange="recomendarPatron()"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta / tolera eventualidad</option></select></div>
+      <div class="field"><label>Madurez del equipo</label><select id="dMadurez" onchange="recomendarPatron()"><option value="baja">Baja</option><option value="media">Media</option><option value="alta">Alta</option></select></div>
+    </div>
+    <div class="result-box" id="resultadoPatron">
+      <h4>Patrón sugerido: —</h4>
+      <p>Complete los criterios para generar la recomendación.</p>
+    </div>
+  </section>
+
+  <section class="section" id="kpis">
+    <div class="section-title">
+      <h3>5. Indicadores operacionales de evaluación</h3>
+      <span>KPIs referenciales de coherencia de datos</span>
+    </div>
+    <div class="help">
+      Ingrese los valores actuales del proceso evaluado. El instrumento compara cada valor con una meta referencial y calcula cuántos indicadores están dentro del rango esperado.
+    </div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+  </section>
+
+  <section class="section" id="reporte">
+    <div class="section-title">
+      <h3>6. Reporte final de aplicación</h3>
+      <span>Resumen imprimible</span>
+    </div>
+    <div class="notice no-print">
+      Pulse “Generar reporte” después de completar las secciones. Luego puede usar “Imprimir reporte” para guardarlo como PDF desde el navegador.
+    </div>
+    <div style="margin:14px 0" class="no-print">
+      <button class="green" onclick="generarReporte()">Generar reporte</button>
+    </div>
+    <div class="report" id="reporteContenido">
+      <p>El reporte se generará con base en la información registrada en el instrumento.</p>
+    </div>
+  </section>
+
+  <div class="footer">
+    Instrumento derivado del Trabajo Especial de Grado: Lineamientos para mejorar la gestión de coherencia de datos en transacciones distribuidas de arquitecturas de microservicios. 
+    Universidad Valle del Momboy · Facultad de Ingeniería · Ingeniería en Computación · Trujillo, 2026.
   </div>
-
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- PANEL 2: LINEAMIENTOS                             -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <div class="panel" id="panel-lin">
-    <div class="section-label">Progreso general</div>
-    <div class="progress-wrap"><div class="progress-bar" id="prog-bar" style="width:0%"></div></div>
-    <div style="font-size:12px;color:var(--text2);margin-bottom:1.25rem" id="prog-text">0 de 10 lineamientos completados</div>
-
-    <div class="section-label">Lineamientos organizacionales y operacionales</div>
-    <div class="lin-grid" id="lin-grid"></div>
-
-    <div id="lin-detail-wrap" style="display:none"></div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- PANEL 3: ÁRBOL DE DECISIÓN                        -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <div class="panel" id="panel-arbol">
-    <div class="section-label">Selección de patrón transaccional</div>
-    <div class="card" style="margin-bottom:.75rem;font-size:13px;color:var(--text2);line-height:1.6">
-      Responde las preguntas según el proceso distribuido que estás analizando. El árbol te guiará al patrón más adecuado según la criticidad, latencia, infraestructura y madurez del equipo.
-    </div>
-    <div class="tree-card">
-      <div id="tree-content"></div>
-      <button class="reset-btn" onclick="resetTree()" style="margin-top:1rem">↺ Reiniciar árbol</button>
-    </div>
-  </div>
-
-  <!-- ══════════════════════════════════════════════════ -->
-  <!-- PANEL 4: EVALUACIÓN KPIs                          -->
-  <!-- ══════════════════════════════════════════════════ -->
-  <div class="panel" id="panel-eval">
-    <div class="section-label">Indicadores operacionales de coherencia de datos</div>
-    <div style="font-size:13px;color:var(--text2);margin-bottom:1rem;line-height:1.6">
-      Ajusta los sliders con el valor actual de tu organización. Los indicadores inversamente propuestos (↓ menor es mejor) se muestran en rojo cuando superan la meta.
-    </div>
-    <div class="kpi-grid" id="kpi-grid"></div>
-
-    <div class="section-label">Radar de madurez operacional</div>
-    <div class="card">
-      <div class="chart-wrap">
-        <canvas id="kpi-chart" role="img" aria-label="Gráfico radar de 6 KPIs de coherencia de datos en microservicios">KPIs de coherencia de datos en microservicios.</canvas>
-      </div>
-      <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;font-size:12px;color:var(--text2)">
-        <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:3px;background:#639922;display:inline-block;border-radius:2px"></span>Nivel actual</span>
-        <span style="display:flex;align-items:center;gap:5px"><span style="width:12px;height:3px;background:#378add;display:inline-block;border-radius:2px;border-top:2px dashed #378add"></span>Meta</span>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<footer>
-  Araujo Giardinella, L. F. (2026). <em>Lineamientos para mejorar la gestión de coherencia de datos en transacciones distribuidas de arquitecturas de microservicios.</em>
-  Universidad Valle del Momboy · Facultad de Ingeniería · Ingeniería en Computación · Trujillo, Venezuela.<br>
-  Basado en: Arias (2012), Resolución UVM N.° 7494-2025, APA 7.ª ed., Richardson (2018/2020), Microsoft Learn, NIST RDaF, COBIT 2019.
-</footer>
+</main>
 
 <script>
-// ─────────────────────────────────────────────
-// DATOS
-// ─────────────────────────────────────────────
-const LEVELS = [
-  null,
-  { name:"Inicial", short:"Sin prácticas formales",
-    signals:"Correcciones manuales frecuentes, incidentes sin trazabilidad, dual-write no controlado y ausencia de documentación de flujos transaccionales.",
-    actions:"Identificar procesos críticos, listar servicios participantes, mapear datos administrados y reconocer principales puntos de falla.",
-    tags:["Sin flujos documentados","Sin responsables definidos","Sin monitoreo formal","Dual-write no controlado"],
-    bg:"#EEEDFE", tc:"#3C3489", borderColor:"#7F77DD" },
-  { name:"Definido", short:"Documentación básica existe",
-    signals:"Flujos parcialmente registrados, eventos sin estructura uniforme, compensaciones poco claras y responsabilidades incompletas.",
-    actions:"Estandarizar la estructura de eventos, definir la propiedad de datos por servicio, documentar flujos críticos y asignar responsables técnicos y funcionales.",
-    tags:["Documentos básicos","Baja estandarización","Responsables asignados","Eventos sin estructura uniforme"],
-    bg:"#E6F1FB", tc:"#185FA5", borderColor:"#378ADD" },
-  { name:"Gestionado", short:"Patrones aplicados",
-    signals:"Patrones aplicados en producción, pero monitoreo parcial, métricas aún incompletas y verificación de compensaciones pendiente.",
-    actions:"Incorporar métricas operativas, trazas distribuidas, revisión periódica de incidentes, y evidencias de compensación en cada flujo crítico.",
-    tags:["Saga implementado","Transactional Outbox activo","Compensaciones definidas","Métricas parciales"],
-    bg:"#EAF3DE", tc:"#3B6D11", borderColor:"#639922" },
-  { name:"Optimizado", short:"KPIs y alertas activos",
-    signals:"Seguimiento operativo activo, análisis de fallas sistemático, evaluación continua de patrones y mejora progresiva de procesos críticos.",
-    actions:"Automatizar alertas, medir tiempos de convergencia, fortalecer análisis de causa raíz y evaluar efectividad de patrones con KPIs periódicos.",
-    tags:["KPIs activos","Tableros de observabilidad","Alertas configuradas","Análisis de causa raíz"],
-    bg:"#FAEEDA", tc:"#854F0B", borderColor:"#EF9F27" },
-  { name:"Resiliente", short:"Mejora continua activa",
-    signals:"Prácticas de mejora continua, gobernanza activa, pruebas de resiliencia periódicas y adaptación ante cambios arquitectónicos.",
-    actions:"Mantener pruebas de resiliencia, actualizar lineamientos según aprendizajes, auditar procesos críticos y optimizar métricas de coherencia.",
-    tags:["Mejora continua","Gobernanza activa","Pruebas de resiliencia","Adaptación arquitectónica"],
-    bg:"#EAF3DE", tc:"#0F6E56", borderColor:"#1D9E75" }
+const niveles = [
+  {n:1, nombre:"Inicial", desc:"Prácticas informales, correcciones manuales y ausencia de trazabilidad formal."},
+  {n:2, nombre:"Definido", desc:"Documentación básica de servicios, eventos y responsables, aunque con baja estandarización."},
+  {n:3, nombre:"Gestionado", desc:"Uso de patrones, compensaciones e idempotencia en procesos críticos."},
+  {n:4, nombre:"Optimizado", desc:"Indicadores, alertas, tableros, logs, métricas y revisión arquitectónica."},
+  {n:5, nombre:"Resiliente", desc:"Prevención, detección, respuesta, aprendizaje y mejora continua."}
 ];
 
-const PHASES = [
-  { n:1, label:"Diagnóstico inicial", desc:"Aplicar el MMTM y reconocer el nivel de madurez y las brechas de la organización.", bg:"#EEEDFE", tc:"#3C3489" },
-  { n:2, label:"Priorización de procesos críticos", desc:"Identificar y clasificar los flujos distribuidos por criticidad e impacto operativo.", bg:"#E6F1FB", tc:"#185FA5" },
-  { n:3, label:"Documentación de datos y flujos", desc:"Completar fichas de propiedad de datos y matrices de flujos transaccionales.", bg:"#EAF3DE", tc:"#3B6D11" },
-  { n:4, label:"Selección de mecanismos transaccionales", desc:"Aplicar el árbol de decisión para elegir el patrón adecuado a cada proceso.", bg:"#FAEEDA", tc:"#854F0B" },
-  { n:5, label:"Implementación de controles operacionales", desc:"Definir compensaciones, reintentos, idempotencia, observabilidad y protocolos de incidentes.", bg:"#FCEBEB", tc:"#A32D2D" },
-  { n:6, label:"Evaluación y mejora continua", desc:"Medir KPIs periódicamente, revisar incidentes y actualizar los lineamientos.", bg:"#EAF3DE", tc:"#0F6E56" }
+const lineamientos = [
+  {n:1, dim:"Organizacional", titulo:"Diagnosticar el nivel de madurez transaccional de la organización", desc:"Ubicar a la organización en un nivel MMTM antes de adoptar mecanismos complejos.", evidencia:"Diagnóstico MMTM, brechas identificadas y plan de mejora inicial."},
+  {n:2, dim:"Organizacional", titulo:"Identificar y priorizar procesos críticos distribuidos", desc:"Determinar cuáles flujos requieren mayor control por su impacto operativo, financiero, legal o funcional.", evidencia:"Listado de procesos, matriz de criticidad y prioridad de atención."},
+  {n:3, dim:"Organizacional / Operacional", titulo:"Documentar la propiedad de datos por microservicio", desc:"Precisar qué datos administra cada servicio, qué eventos emite o consume y quién responde por ellos.", evidencia:"Ficha de propiedad de datos por microservicio."},
+  {n:4, dim:"Operacional", titulo:"Registrar los flujos transaccionales críticos de extremo a extremo", desc:"Mapear servicios, pasos, eventos, estados intermedios, puntos de falla y evidencias.", evidencia:"Matriz de flujo transaccional crítico."},
+  {n:5, dim:"Operacional", titulo:"Controlar la publicación de eventos y prevenir el riesgo de doble escritura", desc:"Evitar que una escritura local quede confirmada sin publicar el evento correspondiente.", evidencia:"Transactional Outbox o mecanismo equivalente, cola de eventos pendientes y política de reintentos."},
+  {n:6, dim:"Técnico / Operacional", titulo:"Seleccionar patrones transaccionales según el contexto del proceso", desc:"Elegir Saga, Outbox, CQRS, Event Sourcing u otros mecanismos según criticidad, latencia y madurez.", evidencia:"Decisión arquitectónica documentada y justificación del patrón seleccionado."},
+  {n:7, dim:"Operacional", titulo:"Definir compensaciones, reintentos e idempotencia en procesos críticos", desc:"Establecer reglas para actuar ante fallas parciales sin generar duplicidades o ciclos indefinidos.", evidencia:"Matriz de compensaciones, política de reintento e idempotencia documentada."},
+  {n:8, dim:"Operacional", titulo:"Incorporar observabilidad transaccional en operaciones críticas", desc:"Reconstruir el recorrido de una transacción mediante trazas, logs, métricas, alertas y correlación.", evidencia:"Logs estructurados, trazas distribuidas, métricas y tablero de seguimiento."},
+  {n:9, dim:"Organizacional", titulo:"Formalizar la gestión de incidentes por inconsistencia de datos", desc:"Definir cómo detectar, analizar, corregir, cerrar y aprender de una inconsistencia.", evidencia:"Protocolo de incidentes, registro de casos y lecciones aprendidas."},
+  {n:10, dim:"Evaluación", titulo:"Evaluar la gestión de coherencia de datos mediante KPIs y mejora continua", desc:"Medir avances, brechas y efectividad mediante indicadores operacionales ajustables.", evidencia:"Tablero de KPIs, reportes periódicos y actualización de lineamientos internos."}
 ];
 
-const LINEAMIENTOS = [
-  { n:1, title:"Diagnosticar el nivel de madurez", tipo:"org",
-    desc:"Toda organización que use o proyecte usar microservicios debe iniciar con un diagnóstico de madurez transaccional usando el MMTM, antes de adoptar mecanismos complejos.",
-    checks:["Aplicar el MMTM a la organización","Identificar el nivel actual (1 al 5)","Documentar las brechas encontradas","Priorizar acciones según el nivel identificado"] },
-  { n:2, title:"Identificar y priorizar procesos críticos", tipo:"org",
-    desc:"No todos los procesos distribuidos tienen el mismo impacto. Priorizar aquellos cuya falla parcial pueda afectar la continuidad operativa, la experiencia del cliente o el cumplimiento normativo.",
-    checks:["Listar todos los procesos distribuidos existentes","Clasificar cada proceso: criticidad alta / media / baja","Seleccionar los 3-5 flujos más críticos para comenzar","Documentar el impacto esperado de una inconsistencia por proceso"] },
-  { n:3, title:"Documentar la propiedad de datos", tipo:"op",
-    desc:"Cada microservicio debe tener documentado qué datos administra, qué entidades controla, cuál es la fuente de verdad y quién es el responsable técnico y funcional.",
-    checks:["Completar la ficha de propiedad de datos por microservicio","Definir cuál servicio es fuente de verdad por entidad","Registrar eventos emitidos y consumidos por servicio","Asignar responsable técnico y responsable funcional"] },
-  { n:4, title:"Registrar flujos transaccionales críticos", tipo:"op",
-    desc:"Todo proceso distribuido crítico debe contar con una matriz de flujo de extremo a extremo que documente servicios participantes, pasos, eventos, estados intermedios y puntos de falla.",
-    checks:["Completar la matriz de flujo transaccional por proceso","Identificar todos los servicios participantes y su orden","Documentar puntos de falla conocidos o posibles","Registrar los estados intermedios permitidos durante el flujo"] },
-  { n:5, title:"Controlar la publicación de eventos", tipo:"op",
-    desc:"Evitar el dual-write. Aplicar el patrón Transactional Outbox para vincular la persistencia de datos y la publicación de eventos dentro de la misma transacción local en procesos críticos.",
-    checks:["Identificar todos los procesos con riesgo de dual-write","Implementar Transactional Outbox en procesos críticos","Definir políticas de reintento para el relay de mensajes","Monitorear eventos no publicados o huérfanos"] },
-  { n:6, title:"Seleccionar patrones transaccionales", tipo:"op",
-    desc:"La selección del patrón debe basarse en las características del proceso (criticidad, latencia, infraestructura, madurez del equipo), no en la preferencia técnica. Usar el árbol de decisión propuesto.",
-    checks:["Aplicar el árbol de decisión por cada proceso crítico","Documentar el patrón seleccionado y su justificación","Revisar la selección con el equipo de arquitectura","Registrar la decisión en la matriz de decisiones arquitectónicas"] },
-  { n:7, title:"Definir compensaciones e idempotencia", tipo:"op",
-    desc:"Todo proceso distribuido crítico debe tener acciones compensatorias definidas para cada paso que pueda fallar, políticas de reintento controlado e idempotencia en eventos y comandos críticos.",
-    checks:["Definir la acción compensatoria para cada paso del flujo","Establecer la política de reintento: intentos, intervalo, fallo final","Implementar idempotencia en todos los eventos críticos","Documentar compensaciones e idempotencia en la matriz de flujo"] },
-  { n:8, title:"Incorporar observabilidad transaccional", tipo:"op",
-    desc:"Las transacciones críticas deben contar con logs estructurados, métricas operacionales, trazas distribuidas e identificadores de correlación que permitan reconstruir el recorrido de extremo a extremo.",
-    checks:["Instrumentar servicios con OpenTelemetry o equivalente","Activar logs estructurados con identificadores de correlación","Configurar métricas operacionales (latencia, errores, eventos)","Crear tablero de observabilidad para los procesos críticos"] },
-  { n:9, title:"Formalizar la gestión de incidentes", tipo:"org",
-    desc:"Establecer un protocolo formal para la gestión de incidentes por inconsistencia de datos: detección, análisis de causa probable, corrección, compensación y cierre documentado con lección aprendida.",
-    checks:["Adoptar el protocolo de incidentes por inconsistencia","Definir niveles de criticidad: bajo / medio / alto / crítico","Asignar responsable técnico y funcional por tipo de incidente","Registrar la lección aprendida al cerrar cada incidente"] },
-  { n:10, title:"Evaluar con KPIs y mejora continua", tipo:"ev",
-    desc:"Usar los indicadores operacionales para evaluar la efectividad de la gestión de coherencia de datos y ajustar los lineamientos en ciclos de mejora periódica.",
-    checks:["Activar y medir los 6 KPIs de coherencia de datos","Revisar los KPIs mensualmente en reunión de seguimiento","Generar un reporte periódico de seguimiento de la implementación","Actualizar los lineamientos internos según los hallazgos"] }
+const kpis = [
+  {id:"k1", nombre:"Tasa de inconsistencia transaccional", meta:1, tipo:"menor", unidad:"%", ayuda:"Meta referencial: menor o igual a 1%."},
+  {id:"k2", nombre:"Tiempo promedio de detección", meta:30, tipo:"menor", unidad:"min", ayuda:"Meta referencial: menor o igual a 30 minutos."},
+  {id:"k3", nombre:"Tiempo promedio de compensación", meta:2, tipo:"menor", unidad:"h", ayuda:"Meta referencial: menor o igual a 2 horas."},
+  {id:"k4", nombre:"Porcentaje de eventos huérfanos", meta:5, tipo:"menor", unidad:"%", ayuda:"Meta referencial: menor o igual a 5%."},
+  {id:"k5", nombre:"Porcentaje de transacciones auditables", meta:95, tipo:"mayor", unidad:"%", ayuda:"Meta referencial: mayor o igual a 95%."},
+  {id:"k6", nombre:"Eventos críticos con idempotencia", meta:90, tipo:"mayor", unidad:"%", ayuda:"Meta referencial: mayor o igual a 90%."},
+  {id:"k7", nombre:"Procesos críticos documentados", meta:100, tipo:"mayor", unidad:"%", ayuda:"Meta referencial: 100%."}
 ];
 
-const TREE_NODES = {
-  'q1':{ q:"¿El proceso involucra más de un microservicio?",
-    opts:[{label:"No — opera dentro de un solo servicio",next:'res-local'},
-          {label:"Sí — atraviesa múltiples servicios",next:'q2'}], step:1 },
-  'q2':{ q:"¿El proceso debe guardar datos Y publicar un evento de integración en la misma operación?",
-    opts:[{label:"Sí — y el riesgo de inconsistencia es crítico",next:'res-outbox'},
-          {label:"No — la publicación puede ir separada",next:'q3'}], step:2 },
-  'q3':{ q:"¿Las fallas parciales requieren acciones compensatorias entre servicios?",
-    opts:[{label:"Sí — hay pasos que deben revertirse si falla el flujo",next:'q4'},
-          {label:"No — puede tolerar inconsistencias temporales",next:'q5'}], step:3 },
-  'q4':{ q:"¿Qué nivel de control centralizado necesita el flujo?",
-    opts:[{label:"Alto — necesito un orquestador que coordine los pasos",next:'res-saga-orc'},
-          {label:"Bajo — los servicios pueden coordinarse entre sí por eventos",next:'res-saga-cor'}], step:4 },
-  'q5':{ q:"¿El proceso necesita separar los modelos de lectura y escritura?",
-    opts:[{label:"Sí — hay alta carga de consultas o modelos diferenciados",next:'res-cqrs'},
-          {label:"No — pero necesita trazabilidad histórica completa",next:'res-es'}], step:5 }
-};
-
-const TREE_RESULTS = {
-  'res-local':{ label:"Transacción local documentada",
-    desc:"La operación se ejecuta dentro de un solo microservicio. Documenta la transacción, define al responsable y aplica idempotencia si hay reintentos posibles. No se requiere un patrón distribuido.",
-    bg:"#EAF3DE", tc:"#3B6D11" },
-  'res-outbox':{ label:"Transactional Outbox",
-    desc:"Vincula la escritura en la base de datos y la publicación del evento dentro de la misma transacción local. Un proceso de despacho (relay) se encarga de enviar el mensaje al broker de mensajería una vez confirmada la transacción.",
-    bg:"#E6F1FB", tc:"#185FA5" },
-  'res-saga-orc':{ label:"Saga por orquestación",
-    desc:"Un orquestador central coordina los pasos del flujo, llama a cada servicio y define las acciones compensatorias. Ofrece mayor visibilidad y control. Ideal para equipos con madurez media-alta.",
-    bg:"#EEEDFE", tc:"#3C3489" },
-  'res-saga-cor':{ label:"Saga por coreografía",
-    desc:"Cada servicio reacciona a eventos publicados por los anteriores, sin un controlador central. Requiere equipo maduro, infraestructura de mensajería robusta y buena observabilidad para depurar fallas.",
-    bg:"#FAEEDA", tc:"#854F0B" },
-  'res-cqrs':{ label:"CQRS",
-    desc:"Separa el modelo de comandos (escritura) del modelo de consultas (lectura). Mejora la escalabilidad y el rendimiento en procesos con alta carga de consultas o necesidad de proyecciones diferenciadas.",
-    bg:"#E1F5EE", tc:"#0F6E56" },
-  'res-es':{ label:"Event Sourcing",
-    desc:"El estado de una entidad se almacena como una secuencia de eventos, no como un valor actual. Proporciona trazabilidad histórica completa y capacidad de reconstrucción. Requiere capacidad técnica avanzada.",
-    bg:"#FCEBEB", tc:"#A32D2D" }
-};
-
-const KPIS_DEF = [
-  { label:"Tasa de inconsistencia transaccional", meta:1, unit:"%", max:25, inv:true, init:14,
-    hint:"Porcentaje de transacciones críticas con estados divergentes entre servicios. Meta: < 1%" },
-  { label:"Tiempo promedio de detección", meta:30, unit:" min", max:180, inv:true, init:90,
-    hint:"Tiempo para identificar una inconsistencia desde que ocurre. Meta: < 30 min" },
-  { label:"Tiempo promedio de compensación", meta:2, unit:" h", max:12, inv:true, init:6,
-    hint:"Tiempo para ejecutar una acción compensatoria tras detectar la falla. Meta: < 2 h" },
-  { label:"Eventos huérfanos", meta:5, unit:"%", max:40, inv:true, init:22,
-    hint:"Eventos críticos emitidos sin correlación con una transacción válida. Meta: < 5%" },
-  { label:"Transacciones auditables", meta:95, unit:"%", max:100, inv:false, init:40,
-    hint:"Transacciones que pueden reconstruirse de extremo a extremo. Meta: > 95%" },
-  { label:"Procesos críticos documentados", meta:100, unit:"%", max:100, inv:false, init:25,
-    hint:"Procesos críticos con matriz de flujo transaccional completa. Meta: 100%" }
+let nivelSeleccionado = null;
+const escala = [
+  {v:0, t:"0 · No iniciado"},
+  {v:1, t:"1 · Básico"},
+  {v:2, t:"2 · Parcial"},
+  {v:3, t:"3 · Aplicado"},
+  {v:4, t:"4 · Evidenciado"}
 ];
 
-// ─────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────
-let selLevel = null;
-let linState = LINEAMIENTOS.map(l=>({ done:false, checks:Array(l.checks.length).fill(false) }));
-let curLin = null;
-let treePath = ['q1'];
-let kpiVals = KPIS_DEF.map(k=>k.init);
-let kpiChart = null;
-
-// ─────────────────────────────────────────────
-// TABS
-// ─────────────────────────────────────────────
-function switchTab(id) {
-  const ids = ['diag','lin','arbol','eval'];
-  document.querySelectorAll('.tab').forEach((t,i)=>{ t.classList.toggle('active', ids[i]===id); t.setAttribute('aria-selected', ids[i]===id); });
-  document.querySelectorAll('.panel').forEach((p,i)=>{ p.classList.toggle('active', ids[i]===id); });
-  if(id==='eval'){ renderKPIGrid(); setTimeout(renderKPIChart,80); }
-}
-
-// ─────────────────────────────────────────────
-// MMTM LEVELS
-// ─────────────────────────────────────────────
-function renderLevels() {
-  const g = document.getElementById('levels-grid');
-  g.innerHTML = LEVELS.slice(1).map((lv,i)=>`
-    <button class="level-btn ${selLevel===i+1?'active':''}" id="lv-btn-${i+1}"
-      onclick="selectLevel(${i+1})"
-      style="background:${lv.bg};color:${lv.tc}"
-      aria-pressed="${selLevel===i+1}"
-      aria-label="Nivel ${i+1}: ${lv.name}">
-      <div class="level-n">${i+1}</div>
-      <div class="level-name">${lv.name}</div>
-    </button>
-  `).join('');
-}
-
-function selectLevel(n) {
-  selLevel = n;
-  document.getElementById('m-mmtm').textContent = 'Nivel '+n;
-  renderLevels();
-  const lv = LEVELS[n];
-  const d = document.getElementById('level-detail');
-  d.style.display = 'block';
-  d.innerHTML = `
-    <div class="detail-box" style="background:${lv.bg};border-color:${lv.borderColor}20">
-      <div class="detail-title" style="color:${lv.tc}">Nivel ${n} — ${lv.name}</div>
-      <div class="detail-section" style="color:${lv.tc}88">Señales de entrada</div>
-      <div class="detail-text" style="color:${lv.tc}">${lv.signals}</div>
-      <div class="detail-section" style="color:${lv.tc}88">Acciones recomendadas</div>
-      <div class="detail-text" style="color:${lv.tc}">${lv.actions}</div>
-      <div class="detail-section" style="color:${lv.tc}88">Indicadores verificables</div>
-      <div class="tag-row">${lv.tags.map(t=>`<span class="tag" style="background:${lv.borderColor}22;color:${lv.tc}">${t}</span>`).join('')}</div>
-    </div>`;
-}
-
-function renderPhases() {
-  const c = document.getElementById('phases-list');
-  c.innerHTML = PHASES.map((p,i)=>`
-    ${i>0?'<div class="phase-connector"></div>':''}
-    <div class="phase-row">
-      <div class="phase-dot" style="background:${p.bg};color:${p.tc}">${p.n}</div>
-      <div class="phase-body">
-        <div class="phase-title">${p.label}</div>
-        <div class="phase-desc">${p.desc}</div>
-      </div>
+function crearNiveles(){
+  const grid = document.getElementById("levelGrid");
+  grid.innerHTML = niveles.map(x => `
+    <div class="level-card" id="nivel_${x.n}" onclick="seleccionarNivel(${x.n})">
+      <div class="num">${x.n}</div>
+      <h4>${x.nombre}</h4>
+      <p>${x.desc}</p>
     </div>
-  `).join('');
+  `).join("");
 }
 
-// ─────────────────────────────────────────────
-// LINEAMIENTOS
-// ─────────────────────────────────────────────
-const TIPO_LABEL = { org:"Organizacional", op:"Operacional", ev:"Evaluación" };
-const TIPO_CLS   = { org:"badge-org", op:"badge-op", ev:"badge-ev" };
-
-function renderLinGrid() {
-  const done = linState.filter(l=>l.done).length;
-  document.getElementById('m-lin').textContent = done+'/10';
-  const pct = Math.round(done/10*100);
-  document.getElementById('prog-bar').style.width = pct+'%';
-  document.getElementById('prog-text').textContent = done+' de 10 lineamientos completados ('+pct+'%)';
-
-  const g = document.getElementById('lin-grid');
-  g.innerHTML = LINEAMIENTOS.map((l,i)=>`
-    <div class="lin-card ${linState[i].done?'done':''} ${curLin===i?'selected':''}"
-      onclick="openLin(${i})" role="button" tabindex="0"
-      onkeydown="if(event.key==='Enter')openLin(${i})"
-      aria-label="Lineamiento ${l.n}: ${l.title}${linState[i].done?' (completado)':''}">
-      <div class="lin-num">Lineamiento ${l.n}</div>
-      <div class="lin-title">${l.title}</div>
-      <div class="lin-badges">
-        <span class="badge ${TIPO_CLS[l.tipo]}">${TIPO_LABEL[l.tipo]}</span>
-        ${linState[i].done?'<span class="badge badge-ok">✓ Completado</span>':''}
-      </div>
-    </div>
-  `).join('');
+function seleccionarNivel(n){
+  nivelSeleccionado = n;
+  niveles.forEach(x => document.getElementById("nivel_"+x.n).classList.toggle("active", x.n===n));
+  actualizar();
 }
 
-function openLin(i) {
-  curLin = i;
-  renderLinGrid();
-  const l = LINEAMIENTOS[i];
-  const s = linState[i];
-  const wrap = document.getElementById('lin-detail-wrap');
-  wrap.style.display = 'block';
-  wrap.innerHTML = `
-    <div class="lin-detail">
-      <div class="lin-detail-title">L${l.n}. ${l.title}</div>
-      <div class="lin-detail-desc">${l.desc}</div>
-      <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Checklist de aplicación</div>
-      ${l.checks.map((ch,ci)=>`
-        <div class="check-row ${s.checks[ci]?'done-row':''}" onclick="toggleCheck(${i},${ci})" role="checkbox" aria-checked="${s.checks[ci]}" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCheck(${i},${ci})" aria-label="${ch}">
-          <div class="check-box ${s.checks[ci]?'on':''}"></div>
-          <span>${ch}</span>
-        </div>
-      `).join('')}
-    </div>`;
-  wrap.scrollIntoView({ behavior:'smooth', block:'nearest' });
+function crearLineamientos(){
+  const body = document.getElementById("tbodyLineamientos");
+  body.innerHTML = lineamientos.map(l => `
+    <tr>
+      <td>
+        <div class="lin-title">L${l.n}. ${l.titulo}</div>
+        <div class="lin-desc">${l.desc}</div>
+        <div class="evidence"><strong>Evidencia mínima sugerida:</strong> ${l.evidencia}</div>
+      </td>
+      <td>${l.dim}</td>
+      <td>
+        <select class="rating-select" id="lin_${l.n}" onchange="actualizar()">
+          ${escala.map(e => `<option value="${e.v}">${e.t}</option>`).join("")}
+        </select>
+        <div style="margin-top:8px"><span id="st_${l.n}" class="status s0">No iniciado</span></div>
+      </td>
+      <td><textarea id="ev_${l.n}" oninput="actualizar()" placeholder="Documento, log, tablero, matriz, responsable, observación..."></textarea></td>
+      <td><textarea id="ac_${l.n}" oninput="actualizar()" placeholder="Acción recomendada o pendiente..."></textarea></td>
+    </tr>
+  `).join("");
 }
 
-function toggleCheck(li, ci) {
-  linState[li].checks[ci] = !linState[li].checks[ci];
-  linState[li].done = linState[li].checks.every(Boolean);
-  openLin(li);
-  renderLinGrid();
-}
-
-// ─────────────────────────────────────────────
-// ÁRBOL DE DECISIÓN
-// ─────────────────────────────────────────────
-function renderTree() {
-  const c = document.getElementById('tree-content');
-  const cur = treePath[treePath.length-1];
-
-  if(TREE_RESULTS[cur]) {
-    const r = TREE_RESULTS[cur];
-    document.getElementById('m-patron').textContent = r.label;
-    const crumbs = treePath.slice(0,-1).map((id,i)=>{
-      const node = TREE_NODES[id];
-      return node ? `<span class="crumb">Pregunta ${node.step}</span>${i<treePath.length-2?'<span class="crumb-arrow">›</span>':''}` : '';
-    }).join('');
-    c.innerHTML = `
-      ${crumbs?`<div class="tree-breadcrumb">${crumbs}</div>`:''}
-      <div class="result-card" style="background:${r.bg}">
-        <div class="result-pattern" style="color:${r.tc}">✓ ${r.label}</div>
-        <div class="result-desc" style="color:${r.tc}">${r.desc}</div>
-      </div>`;
-    return;
-  }
-
-  const node = TREE_NODES[cur];
-  if(!node) return;
-
-  const crumbs = treePath.slice(0,-1).map((id,i)=>{
-    const n2 = TREE_NODES[id];
-    return n2 ? `<span class="crumb">Pregunta ${n2.step}</span><span class="crumb-arrow">›</span>` : '';
-  }).join('');
-
-  c.innerHTML = `
-    ${crumbs?`<div class="tree-breadcrumb">${crumbs}</div>`:''}
-    <div class="tree-step">Pregunta ${node.step} de hasta 5</div>
-    <div class="tree-q">${node.q}</div>
-    <div class="tree-opts">
-      ${node.opts.map(o=>`
-        <button class="tree-opt" onclick="treeSelect('${o.next}')">${o.label}</button>
-      `).join('')}
-    </div>`;
-}
-
-function treeSelect(next) {
-  treePath.push(next);
-  renderTree();
-}
-
-function resetTree() {
-  treePath = ['q1'];
-  document.getElementById('m-patron').textContent = '—';
-  renderTree();
-}
-
-// ─────────────────────────────────────────────
-// KPIs
-// ─────────────────────────────────────────────
-function kpiStatus(i) {
-  const k = KPIS_DEF[i], v = kpiVals[i];
-  if(k.inv) {
-    if(v <= k.meta) return 'dot-green';
-    if(v <= k.meta * 2.5) return 'dot-amber';
-    return 'dot-red';
-  } else {
-    if(v >= k.meta) return 'dot-green';
-    if(v >= k.meta * 0.6) return 'dot-amber';
-    return 'dot-red';
-  }
-}
-
-function kpiLabel(i) {
-  const k = KPIS_DEF[i], v = kpiVals[i];
-  const st = kpiStatus(i);
-  const icons = { 'dot-green':'✓ En meta', 'dot-amber':'⚠ Cerca', 'dot-red':'✗ Fuera de meta' };
-  return icons[st];
-}
-
-function renderKPIGrid() {
-  const g = document.getElementById('kpi-grid');
-  g.innerHTML = KPIS_DEF.map((k,i)=>`
+function crearKPIs(){
+  const grid = document.getElementById("kpiGrid");
+  grid.innerHTML = kpis.map(k => `
     <div class="kpi-card">
-      <div class="kpi-name">${k.label}</div>
-      <div class="kpi-slider-row">
-        <input type="range" class="kpi-slider" min="0" max="${k.max}" step="${k.unit===' h'?'0.5':'1'}" value="${kpiVals[i]}"
-          oninput="updateKPI(${i},+this.value)" aria-label="${k.label}: ${kpiVals[i]}${k.unit}">
-        <span class="kpi-num" id="kv-${i}">${kpiVals[i]}${k.unit}</span>
-      </div>
-      <div class="kpi-status">
-        <span class="status-dot ${kpiStatus(i)}"></span>
-        <span class="kpi-meta" id="ks-${i}">${kpiLabel(i)} · meta: ${k.inv?'< ':'> '}${k.meta}${k.unit}</span>
+      <h4>${k.nombre}</h4>
+      <div class="field"><label>Valor actual (${k.unidad})</label><input id="${k.id}" type="number" step="0.01" oninput="actualizar()" placeholder="0"></div>
+      <div class="kpi-meta">
+        <span class="dot bad" id="dot_${k.id}"></span>
+        <strong id="res_${k.id}">Sin dato</strong>
+        <span style="color:var(--muted);font-size:12px">${k.ayuda}</span>
       </div>
     </div>
-  `).join('');
+  `).join("");
 }
 
-function updateKPI(i, v) {
-  kpiVals[i] = v;
-  const kv = document.getElementById('kv-'+i);
-  const ks = document.getElementById('ks-'+i);
-  const sl = document.querySelectorAll('.kpi-slider')[i];
-  const dot = sl?.closest('.kpi-card')?.querySelector('.status-dot');
-  if(kv) kv.textContent = v + KPIS_DEF[i].unit;
-  if(ks) ks.textContent = kpiLabel(i)+' · meta: '+(KPIS_DEF[i].inv?'< ':'> ')+KPIS_DEF[i].meta+KPIS_DEF[i].unit;
-  if(dot){ dot.className='status-dot '+kpiStatus(i); }
-  if(kpiChart) {
-    kpiChart.data.datasets[0].data = KPIS_DEF.map((_,j)=>kpiScore(j));
-    kpiChart.update('none');
-  }
+function estadoTexto(v){
+  if(v===0) return ["No iniciado","s0"];
+  if(v===1) return ["Básico","s1"];
+  if(v===2) return ["Parcial","s2"];
+  if(v===3) return ["Aplicado","s3"];
+  return ["Evidenciado","s4"];
 }
 
-function kpiScore(i) {
-  const k = KPIS_DEF[i], v = kpiVals[i];
-  if(k.inv) return Math.max(0, Math.round((1 - v/k.max)*100));
-  return Math.round((v/k.max)*100);
-}
-
-function renderKPIChart() {
-  const ctx = document.getElementById('kpi-chart');
-  if(!ctx) return;
-  if(kpiChart){ kpiChart.destroy(); kpiChart=null; }
-  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
-  const textColor = isDark ? '#a8a69f' : '#5f5e5a';
-  kpiChart = new Chart(ctx, {
-    type:'radar',
-    data:{
-      labels: KPIS_DEF.map(k=>k.label.length>22 ? k.label.substring(0,22)+'…' : k.label),
-      datasets:[{
-        label:'Nivel actual',
-        data: KPIS_DEF.map((_,i)=>kpiScore(i)),
-        backgroundColor:'rgba(99,153,34,0.12)',
-        borderColor:'#639922',
-        borderWidth:2,
-        pointBackgroundColor:'#639922',
-        pointRadius:5,
-        pointHoverRadius:7
-      },{
-        label:'Meta',
-        data: Array(6).fill(88),
-        backgroundColor:'rgba(55,138,221,0.05)',
-        borderColor:'#378ADD',
-        borderWidth:1.5,
-        borderDash:[6,4],
-        pointRadius:3,
-        pointBackgroundColor:'#378ADD'
-      }]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:(ctx)=>ctx.dataset.label+': '+ctx.raw+'%' } } },
-      scales:{
-        r:{
-          min:0, max:100,
-          ticks:{ stepSize:25, font:{ size:10 }, color:textColor, backdropColor:'transparent' },
-          pointLabels:{ font:{ size:11 }, color:textColor },
-          grid:{ color:gridColor },
-          angleLines:{ color:gridColor }
-        }
-      }
-    }
+function calcularLineamientos(){
+  let total = 0;
+  lineamientos.forEach(l => {
+    const v = Number(document.getElementById("lin_"+l.n).value);
+    total += v;
+    const [txt, cls] = estadoTexto(v);
+    const st = document.getElementById("st_"+l.n);
+    st.textContent = txt;
+    st.className = "status " + cls;
   });
+  const pct = Math.round((total / (lineamientos.length*4))*100);
+  document.getElementById("pctLineamientos").textContent = pct + "%";
+  document.getElementById("progressLineamientos").style.width = pct + "%";
+  document.getElementById("sumAplicacion").textContent = pct + "%";
+  let interp = "Inicial";
+  if(pct >= 86) interp = "Resiliente";
+  else if(pct >= 71) interp = "Optimizado";
+  else if(pct >= 51) interp = "Gestionado";
+  else if(pct >= 31) interp = "Definido";
+  document.getElementById("interpLineamientos").textContent = interp;
+  return pct;
 }
 
-// ─────────────────────────────────────────────
-// INIT
-// ─────────────────────────────────────────────
-renderLevels();
-renderPhases();
-renderLinGrid();
-renderTree();
+function calcularCriticidad(){
+  const ids = ["impactoOperativo","impactoFinanciero","impactoUsuario","impactoLegal"];
+  const s = ids.reduce((a,id)=>a+Number(document.getElementById(id).value),0);
+  let txt = "Baja";
+  if(s>=14) txt = "Crítica";
+  else if(s>=10) txt = "Alta";
+  else if(s>=7) txt = "Media";
+  document.getElementById("criticidad").textContent = txt + " (" + s + "/16)";
+  return txt;
+}
+
+function recomendarPatron(){
+  const multi = document.getElementById("dMulti").value;
+  const dual = document.getElementById("dDual").value;
+  const comp = document.getElementById("dComp").value;
+  const control = document.getElementById("dControl").value;
+  const cqrs = document.getElementById("dCQRS").value;
+  const es = document.getElementById("dES").value;
+  const mad = document.getElementById("dMadurez").value;
+  const lat = document.getElementById("dLat").value;
+
+  let patron = "Eventos asíncronos con observabilidad e idempotencia";
+  let just = "El proceso puede gestionarse mediante eventos, trazabilidad, reglas de reintento e idempotencia, siempre que se documenten responsables y evidencias.";
+
+  if(multi === "no"){
+    patron = "Transacción local documentada";
+    just = "El flujo no requiere un patrón distribuido principal. Se recomienda documentar la transacción local, responsable, logs e idempotencia si existen reintentos.";
+  } else if(dual === "si"){
+    patron = "Transactional Outbox";
+    just = "Existe riesgo de doble escritura. Conviene vincular la persistencia local y el mensaje pendiente dentro de la misma transacción local, con despacho controlado y monitoreo.";
+  } else if(comp === "si" && control === "alto"){
+    patron = "Saga por orquestación";
+    just = "El flujo requiere compensaciones y control centralizado. Un orquestador puede coordinar pasos, estados y compensaciones con mayor visibilidad.";
+  } else if(comp === "si" && control === "bajo"){
+    patron = "Saga por coreografía";
+    just = "El flujo requiere compensaciones, pero puede coordinarse mediante eventos entre servicios. Debe usarse con alta observabilidad y reglas claras de eventos.";
+  } else if(cqrs === "si"){
+    patron = "CQRS";
+    just = "La separación de lectura y escritura puede mejorar rendimiento y organización de modelos, especialmente si existen consultas intensivas o proyecciones diferenciadas.";
+  } else if(es === "si"){
+    patron = "Event Sourcing";
+    just = "La necesidad de auditoría histórica completa justifica registrar la evolución del estado mediante eventos. Requiere alta madurez técnica y disciplina de diseño.";
+  }
+
+  if(mad === "baja" && ["Saga por coreografía","Event Sourcing"].includes(patron)){
+    just += " Advertencia: la madurez indicada es baja, por lo que se recomienda adoptar primero documentación, observabilidad y pilotos controlados.";
+  }
+  if(lat === "baja" && patron !== "Transacción local documentada"){
+    just += " Nota: la latencia baja puede limitar enfoques altamente asíncronos; debe validarse el impacto operativo.";
+  }
+
+  document.getElementById("resultadoPatron").innerHTML = `<h4>Patrón sugerido: ${patron}</h4><p>${just}</p>`;
+  document.getElementById("sumPatron").textContent = patron;
+  return patron;
+}
+
+function evaluarKPIs(){
+  let ok = 0;
+  kpis.forEach(k => {
+    const raw = document.getElementById(k.id).value;
+    const dot = document.getElementById("dot_"+k.id);
+    const res = document.getElementById("res_"+k.id);
+    if(raw === ""){
+      dot.className = "dot bad";
+      res.textContent = "Sin dato";
+      return;
+    }
+    const v = Number(raw);
+    const cumple = k.tipo === "menor" ? v <= k.meta : v >= k.meta;
+    if(cumple) ok++;
+    dot.className = "dot " + (cumple ? "ok" : "bad");
+    res.textContent = cumple ? "En meta" : "Fuera de meta";
+  });
+  document.getElementById("sumKpis").textContent = ok + "/7";
+  return ok;
+}
+
+function actualizar(){
+  calcularLineamientos();
+  calcularCriticidad();
+  recomendarPatron();
+  evaluarKPIs();
+  document.getElementById("sumNivel").textContent = nivelSeleccionado ? ("Nivel " + nivelSeleccionado) : "—";
+}
+
+function generarReporte(){
+  actualizar();
+  const pct = calcularLineamientos();
+  const patron = recomendarPatron();
+  const criticidad = calcularCriticidad();
+  const kpiOk = evaluarKPIs();
+  const nivel = nivelSeleccionado ? niveles.find(x=>x.n===nivelSeleccionado).nombre : "No seleccionado";
+  const org = val("org") || "No indicado";
+  const proceso = val("proceso") || "No indicado";
+  const fecha = val("fecha") || "No indicada";
+  const servicios = val("servicios") || "No indicado";
+
+  const bajos = lineamientos.map(l => ({
+    ...l,
+    score:Number(document.getElementById("lin_"+l.n).value),
+    evidencia:val("ev_"+l.n),
+    accion:val("ac_"+l.n)
+  })).filter(x => x.score < 3).sort((a,b)=>a.score-b.score);
+
+  const kpiRows = kpis.map(k => {
+    const raw = document.getElementById(k.id).value;
+    if(raw === "") return `<li>${k.nombre}: sin dato registrado.</li>`;
+    const v = Number(raw);
+    const cumple = k.tipo === "menor" ? v <= k.meta : v >= k.meta;
+    return `<li>${k.nombre}: ${v}${k.unidad} · ${cumple ? "en meta" : "fuera de meta"} · meta ${k.tipo==="menor"?"≤":"≥"} ${k.meta}${k.unidad}.</li>`;
+  }).join("");
+
+  const acciones = bajos.length ? bajos.slice(0,5).map(x => `<li><strong>L${x.n}.</strong> ${x.titulo} — estado actual: ${estadoTexto(x.score)[0]}. Acción pendiente: ${x.accion || "definir acción específica y responsable."}</li>`).join("") : "<li>No se identifican brechas prioritarias por debajo del nivel aplicado.</li>";
+
+  const evidenciaFaltante = lineamientos.filter(l => Number(document.getElementById("lin_"+l.n).value) >= 3 && !val("ev_"+l.n)).map(l => `<li>L${l.n}. ${l.titulo}</li>`).join("");
+
+  document.getElementById("reporteContenido").innerHTML = `
+    <h4>Reporte de aplicación del instrumento</h4>
+    <p><strong>Organización:</strong> ${esc(org)}<br>
+    <strong>Proceso evaluado:</strong> ${esc(proceso)}<br>
+    <strong>Fecha:</strong> ${esc(fecha)}<br>
+    <strong>Servicios involucrados:</strong> ${esc(servicios)}</p>
+
+    <h4>Resultado general</h4>
+    <ul>
+      <li><strong>Porcentaje de aplicación de lineamientos:</strong> ${pct}%.</li>
+      <li><strong>Interpretación por avance:</strong> ${document.getElementById("interpLineamientos").textContent}.</li>
+      <li><strong>Nivel MMTM seleccionado:</strong> ${esc(nivel)}.</li>
+      <li><strong>Criticidad del proceso:</strong> ${esc(criticidad)}.</li>
+      <li><strong>Patrón transaccional sugerido:</strong> ${esc(patron)}.</li>
+      <li><strong>KPIs en meta:</strong> ${kpiOk}/7.</li>
+    </ul>
+
+    <h4>Brechas prioritarias</h4>
+    <ul>${acciones}</ul>
+
+    <h4>Indicadores evaluados</h4>
+    <ul>${kpiRows}</ul>
+
+    <h4>Evidencias pendientes</h4>
+    <ul>${evidenciaFaltante || "<li>No se detectan lineamientos aplicados sin evidencia registrada.</li>"}</ul>
+
+    <h4>Recomendación de uso</h4>
+    <p>El proceso debe revisarse periódicamente, actualizando evidencias, responsables, KPIs e incidentes. 
+    La aplicación del instrumento debe considerarse como una práctica de mejora continua y no como una evaluación única.</p>
+  `;
+}
+
+function val(id){return (document.getElementById(id)?.value || "").trim()}
+function esc(s){return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+function datos(){
+  const data = {nivelSeleccionado};
+  document.querySelectorAll("input,select,textarea").forEach(el => data[el.id] = el.value);
+  return data;
+}
+function cargar(data){
+  if(!data) return;
+  nivelSeleccionado = data.nivelSeleccionado || null;
+  document.querySelectorAll("input,select,textarea").forEach(el => {
+    if(data[el.id] !== undefined) el.value = data[el.id];
+  });
+  if(nivelSeleccionado) seleccionarNivel(nivelSeleccionado);
+  actualizar();
+}
+function guardar(){
+  localStorage.setItem("instrumento_lineamientos_uvm", JSON.stringify(datos()));
+  alert("Avance guardado en este navegador.");
+}
+function exportarJSON(){
+  const blob = new Blob([JSON.stringify(datos(), null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "reporte_instrumento_lineamientos_microservicios.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function reiniciar(){
+  if(!confirm("¿Desea limpiar todos los campos del instrumento?")) return;
+  localStorage.removeItem("instrumento_lineamientos_uvm");
+  document.querySelectorAll("input,select,textarea").forEach(el => {
+    if(el.type === "date") el.value = "";
+    else if(el.tagName === "SELECT") el.selectedIndex = 0;
+    else el.value = "";
+  });
+  document.getElementById("version").value = "1.0";
+  nivelSeleccionado = null;
+  niveles.forEach(x => document.getElementById("nivel_"+x.n).classList.remove("active"));
+  document.getElementById("reporteContenido").innerHTML = "<p>El reporte se generará con base en la información registrada en el instrumento.</p>";
+  actualizar();
+}
+
+crearNiveles();
+crearLineamientos();
+crearKPIs();
+document.getElementById("fecha").valueAsDate = new Date();
+actualizar();
+try{ cargar(JSON.parse(localStorage.getItem("instrumento_lineamientos_uvm"))); }catch(e){}
 </script>
 </body>
 </html>
